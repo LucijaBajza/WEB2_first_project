@@ -20,7 +20,7 @@ app.set("view engine", "ejs");
 
 const {
   MY_SECRET,
-  BASE_URL,
+  RENDER_EXTERNAL_URL,
   CLIENT_SECRET,
   ISSUER_BASE_URL,
   CLIENT_ID,
@@ -32,7 +32,7 @@ const config = {
   authRequired: false,
   idpLogout: true, // login ne samo iz aplikacije, već i iz identity provider-a
   secret: MY_SECRET,
-  baseURL: BASE_URL || `https://localhost:3000`,
+  baseURL: RENDER_EXTERNAL_URL || `https://localhost:3000`,
   clientID: CLIENT_ID,
   issuerBaseURL: ISSUER_BASE_URL,
   clientSecret: CLIENT_SECRET,
