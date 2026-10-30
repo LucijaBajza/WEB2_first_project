@@ -107,10 +107,13 @@ router.post("/passes", requiredScopes("create:passes"), async (req, res) => {
   try {
     await createPass(id, name, document, issuedAt, status);
 
-    const publicUrl = `${process.env.BASE_URL}/info/${id}`;
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || "http://localhost:3000";
+
+    const publicUrl = `${baseUrl}/info/${id}`;
     const qrCodeImage = await QRCode.toBuffer(publicUrl);
 
-    const apiLocation = `${process.env.BASE_URL}/passes/${id}`;
+    const apiLocation = `${baseUrl}/passes/${id}`;
+
     res.setHeader("Location", apiLocation);
     res.status(201).type("image/png").send(qrCodeImage);
   } catch (err) {
