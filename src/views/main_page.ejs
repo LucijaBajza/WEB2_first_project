@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sustav Propusnica</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    .btn { padding: 5px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Pregled Sustava Propusnica</h1>
+  <p><strong>Ukupno propusnica:</strong> <%= totalCount %></p>
+  <p><strong>Aktivnih propusnica:</strong> <%= activeCount %></p>
+
+  <% if (!isAuthenticated) { %>
+    <a href="/login" class="btn">Prijavi se</a>
+  <% } else { %>
+    <p>Prijavljeni ste kao: <%= user.name %> | <a href="/logout">Odjavi se</a></p>
+    
+    <h2>Sve propusnice</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Ime</th>
+          <th>Dokument</th>
+          <th>Status</th>
+          <th>Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% passes.forEach(function(pass) { %>
+          <tr>
+            <td><a href="/info/<%= pass.id %>"><%= pass.id %></a></td>
+            <td><%= pass.name %></td>
+            <td><%= pass.document %></td>
+            <td><%= pass.status %></td>
+            <td>
+              <% if (pass.status === 'ACTIVE') { %>
+                <form action="/web/passes/<%= pass.id %>/cancel" method="POST" style="display:inline;">
+                  <button type="submit" class="btn">Poništi</button>
+                </form>
+              <% } %>
+              <form action="/web/passes/<%= pass.id %>/delete" method="POST" style="display:inline;">
+                <button type="submit" class="btn" style="color: red;">Obriši</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</body>
+</html>
