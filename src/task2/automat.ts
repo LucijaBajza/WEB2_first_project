@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { Buffer } from "buffer";
 
+// dohvat tokena s auth0
 export async function getToken(
   authority: string,
   audience: string,
@@ -10,6 +11,7 @@ export async function getToken(
 ): Promise<string> {
   const tokenUrl = new URL("/oauth/token", authority).toString();
 
+  // slanje post zahtjeva za dohvat tokena
   const response = await fetch(tokenUrl, {
     method: "POST",
     headers: {
@@ -25,15 +27,15 @@ export async function getToken(
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Greška prilikom dohvaćanja tokena. Status: ${response.status}`,
-    );
+    throw new Error(`Error fetching token. Status: ${response.status}`);
   }
 
+  // vrati access token
   const data = (await response.json()) as { access_token: string };
   return data.access_token;
 }
 
+// funkcija za izdavanje propusnice
 export async function issuePass(
   url: string,
   token: string,
@@ -42,6 +44,7 @@ export async function issuePass(
 ): Promise<string> {
   const response = await fetch(url, {
     method: "POST",
+    // bearer token u zaglavlju zahtjeva
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -53,27 +56,25 @@ export async function issuePass(
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Greška prilikom izdavanja propusnice. Status: ${response.status}`,
-    );
+    throw new Error(`Error issuing pass. Status: ${response.status}`);
   }
 
   const location = response.headers.get("Location");
   if (!location) {
-    throw new Error("Nedostaje Location zaglavlje u odgovoru.");
+    throw new Error("Missing Location header in response.");
   }
 
-  // Ekstrakcija identifikatora iz Location zaglavlja (npr. iz /passes/f81d4fae-...)
+  // ostavi samo id iz location
   const id = location.substring(location.lastIndexOf("/") + 1);
   if (!id) {
-    throw new Error("Nije moguće izvući identifikator iz Location zaglavlja.");
+    throw new Error("Unable to extract identifier from Location header.");
   }
 
-  // Preuzimanje binarnih podataka QR koda
+  // binarni podatci qr koda
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Zapisivanje u datoteku <id>.png
+  // zapisivanje u datoteku <id>.png
   await writeFile(`${id}.png`, buffer);
 
   return id;

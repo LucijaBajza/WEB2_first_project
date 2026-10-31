@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sustav Propusnica</title>
+  <title>Digitalne propusnice</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <h1>Pregled Sustava Propusnica</h1>
+  <h1>Sustav digitalnih propusnica</h1>
   <p><strong>Ukupno propusnica:</strong> <%= totalCount %></p>
   <p><strong>Aktivnih propusnica:</strong> <%= activeCount %></p>
 
@@ -21,7 +21,7 @@
   <% } else { %>
     <p>Prijavljeni ste kao: <%= user.name %> | <a href="/logout">Odjavi se</a></p>
     
-    <h2>Sve propusnice</h2>
+    <h2>Prikaz propusnica</h2>
     <table>
       <thead>
         <tr>
